@@ -1,3 +1,9 @@
+/*
+-------------------------------------------------------------------------
+//Assignment 1
+// author : Negar Saeidi - 101261396
+// Entity.cpp, adjusts the velocity of the entity
+-------------------------------------------------------------------------*/
 #include "Entity.hpp"
 
 Entity::Entity(Game* game):SceneNode(game)
@@ -23,7 +29,10 @@ XMFLOAT2 Entity::getVelocity() const
 
 void Entity::updateCurrent(const GameTimer& gt)
 {
+
 	float xMovement = mVelocity.x * gt.DeltaTime();
 	float yMovement = mVelocity.y * gt.DeltaTime();
-	move(xMovement,yMovement,0);
+	move(xMovement,0, yMovement);
+
+	
 }

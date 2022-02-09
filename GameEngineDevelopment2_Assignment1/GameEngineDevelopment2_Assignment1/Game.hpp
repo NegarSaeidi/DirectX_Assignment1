@@ -1,6 +1,11 @@
 #pragma once
 #include "World.hpp"
-
+enum class RenderLayer : int
+{
+    Opaque = 0,
+    AlphaTested,
+    Count
+};
 class Game: public D3DApp
 {
 public:
@@ -57,15 +62,14 @@ private:
     std::unordered_map<std::string, std::unique_ptr<Texture>> mTextures;
     std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
     std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
-
     std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
 
     // List of all the render items.
     std::vector<std::unique_ptr<RenderItem>> mAllRitems;
 
     // Render items divided by PSO.
-    std::vector<RenderItem*> mOpaqueRitems;
 
+    std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count];
     PassConstants mMainPassCB;
 
  /*   XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
@@ -81,8 +85,9 @@ private:
     World mWorld;
 
 public:
+   
     std::vector<std::unique_ptr<RenderItem>>& getRenderItems() ;
     std::unordered_map<std::string, std::unique_ptr<Material>>& getMaterilas();
     std::unordered_map<std::string, std::unique_ptr<MeshGeometry>>& getGeometries() ;
-
+   
 };

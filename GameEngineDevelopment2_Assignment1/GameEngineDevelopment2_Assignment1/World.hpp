@@ -30,9 +30,9 @@ private:
 	XMFLOAT4                                          mWorldBounds;
     XMFLOAT2                                          mSpawnPostion;
 	float                                             mScrollSpeed;
-	Aircraft*                                         mPlayerAircraft;
+	Aircraft*                                         mPlayerAircraft,*Escort1, *Escort2;
 	SpriteNode*                                       mBackground;
-	Aircraft*                                         mEnemy;
+
 
 
 

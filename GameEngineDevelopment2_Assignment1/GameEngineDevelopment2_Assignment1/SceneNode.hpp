@@ -73,7 +73,7 @@ public:
 	XMFLOAT4X4              getTransform() const;
 
 	void                    move(float x, float y, float z);
-
+	
 private:
 	virtual void            updateCurrent(const GameTimer& gt);
 	void                    updateChildren(const GameTimer& gt);

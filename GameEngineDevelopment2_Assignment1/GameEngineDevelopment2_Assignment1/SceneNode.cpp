@@ -1,3 +1,9 @@
+/*
+-------------------------------------------------------------------------
+//Assignment 1
+// author : Negar Saeidi - 101261396
+// SceneNode.cpp
+-------------------------------------------------------------------------*/
 #include "SceneNode.hpp"
 
 SceneNode::SceneNode(Game* game) :
@@ -111,7 +117,7 @@ XMFLOAT4X4 SceneNode::getTransform() const
 		* XMMatrixRotationRollPitchYaw(mWorlRotation.x, mWorlRotation.y,mWorlRotation.z);
 	XMStoreFloat4x4(&transform, T);
 
-
+	
 	return transform;
 }
 
@@ -124,6 +130,7 @@ void SceneNode::move(float x, float y, float z)
 
 void SceneNode::updateCurrent(const GameTimer& gt)
 {
+	
 }
 
 void SceneNode::updateChildren(const GameTimer& gt)
@@ -136,7 +143,7 @@ void SceneNode::updateChildren(const GameTimer& gt)
 
 void SceneNode::drawCurrent() const
 {
-	
+
 }
 
 void SceneNode::drawChildren() const
@@ -157,5 +164,6 @@ void SceneNode::buildChildren()
 	for (const Ptr& child : mChildren)
 	{
 		child->build();
+		
 	}
 }

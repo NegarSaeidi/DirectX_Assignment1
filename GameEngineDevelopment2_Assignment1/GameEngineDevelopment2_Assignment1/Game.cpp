@@ -1,3 +1,10 @@
+/*
+-------------------------------------------------------------------------
+//Assignment 1
+// author : Negar Saeidi - 101261396
+// Game.cpp
+-------------------------------------------------------------------------*/
+
 #include "Game.hpp"
 
 const int gNumFrameResources = 3;
@@ -19,7 +26,7 @@ bool Game::Initialize()
 	if (!D3DApp::Initialize())
 		return false;
 
-	mCamera.SetPosition(0, 5, 0);
+	mCamera.SetPosition(0, 10, 0);
 	mCamera.Pitch(3.14 / 2);
 	// Reset the command list to prep for initialization commands.
 	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
@@ -60,6 +67,7 @@ void Game::Update(const GameTimer& gt)
 	OnKeyboardInput(gt);
 	mWorld.update(gt);
 	
+	
 
 	// Cycle through the circular frame resource array.
 	mCurrFrameResourceIndex = (mCurrFrameResourceIndex + 1) % gNumFrameResources;
@@ -94,12 +102,9 @@ void Game::Draw(const GameTimer& gt)
 
 	// A command list can be reset after it has been added to the command queue via ExecuteCommandList.
 	// Reusing the command list reuses memory.
-	
-	
+	//step5
+	ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
 
-	
-		ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
-	
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
 
@@ -119,14 +124,15 @@ void Game::Draw(const GameTimer& gt)
 
 	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
 
-
 	auto passCB = mCurrFrameResource->PassCB->Resource();
 	mCommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
-
 	mWorld.draw();
-	
+	//step5
+	//DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::Opaque]);
 
-	DrawRenderItems(mCommandList.Get(), mOpaqueRitems);
+	mCommandList->SetPipelineState(mPSOs["alphaTested"].Get());
+	DrawRenderItems(mCommandList.Get(), mRitemLayer[(int)RenderLayer::AlphaTested]);
+
 
 	// Indicate a state transition on the resource usage.
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
@@ -143,24 +149,13 @@ void Game::Draw(const GameTimer& gt)
 	ThrowIfFailed(mSwapChain->Present(0, 0));
 	mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
 
-
-	//Step1:  we have been calling D3DApp::FlushCommandQueue at the end of every
-	//frame to ensure the GPU has finished executing all the commands for the frame.This solution works but is inefficient
-	//For every frame, the CPU and GPU are idling at some point.
-	//	FlushCommandQueue();
-
-
-	//step9:  Advance the fence value to mark commands up to this fence point.
+	// Advance the fence value to mark commands up to this fence point.
 	mCurrFrameResource->Fence = ++mCurrentFence;
 
 	// Add an instruction to the command queue to set a new fence point. 
 	// Because we are on the GPU timeline, the new fence point won't be 
 	// set until the GPU finishes processing all the commands prior to this Signal().
 	mCommandQueue->Signal(mFence.Get(), mCurrentFence);
-
-	// Note that GPU could still be working on commands from previous
-	// frames, but that is okay, because we are not touching any frame
-	// resources associated with those frames.
 
 	
 }
@@ -373,7 +368,7 @@ void Game::LoadTextures()
 
 		auto DesertTex = std::make_unique<Texture>();
 		DesertTex->Name = "DesertTex";
-		DesertTex->Filename = L"../../Textures/ground.dds";
+		DesertTex->Filename = L"../../Textures/Desert.dds";
 		ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(md3dDevice.Get(),
 			mCommandList.Get(), DesertTex->Filename.c_str(),
 			DesertTex->Resource, DesertTex->UploadHeap));
@@ -460,10 +455,15 @@ void Game::BuildDescriptorHeaps()
 
 void Game::BuildShadersAndInputLayout()
 {
-	
+	const D3D_SHADER_MACRO alphaTestDefines[] =
+	{
+		"FOG", "1",
+		"ALPHA_TEST", "1",
+		NULL, NULL
+	};
 	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
 	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
-	mShaders["alphaTestedPS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl",nullptr , "PS", "ps_5_1");
+	mShaders["alphaTestedPS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", alphaTestDefines, "PS", "ps_5_1");
 
 
 
@@ -556,6 +556,20 @@ void Game::BuildPSOs()
 	opaquePsoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
 	opaquePsoDesc.DSVFormat = mDepthStencilFormat;
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&mPSOs["opaque"])));
+
+
+	// step 8
+	// PSO for alpha tested objects
+	//
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC alphaTestedPsoDesc = opaquePsoDesc;
+	alphaTestedPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["alphaTestedPS"]->GetBufferPointer()),
+		mShaders["alphaTestedPS"]->GetBufferSize()
+	};
+	alphaTestedPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&alphaTestedPsoDesc, IID_PPV_ARGS(&mPSOs["alphaTested"])));
 }
 
 void Game::BuildFrameResources()
@@ -602,7 +616,12 @@ void Game::BuildRenderItems()
 {
 	mWorld.buildScene();
 	for (auto& e : mAllRitems)
-		mOpaqueRitems.push_back(e.get());
+	{
+	//	mOpaqueRitems.push_back(e.get());
+
+		mRitemLayer[(int)RenderLayer::Opaque].push_back(e.get());
+		mRitemLayer[(int)RenderLayer::AlphaTested].push_back(e.get());
+	}
 	
 }
 
