@@ -15,14 +15,22 @@ SceneNode::SceneNode(Game* game) :
 	mWorldScale = XMFLOAT3(1, 1, 1);
 	mWorlRotation = XMFLOAT3(0, 0, 0);
 }
-
+/**
+ * add a child to this node
+ *@param Ptr child
+ * @return void
+ */
 void SceneNode::attachChild(Ptr child)
 {
 
 	child->mParent = this;
 	mChildren.push_back(std::move(child));
 }
-
+/**
+ * detaches a child from this node
+ *@param const SceneNode& node
+ * @return SceneNode::Ptr
+ */
 SceneNode::Ptr SceneNode::detachChild(const SceneNode& node)
 {
 	auto found = std::find_if(mChildren.begin(), mChildren.end(), [&](Ptr& p) { return p.get() == &node; });
@@ -33,44 +41,72 @@ SceneNode::Ptr SceneNode::detachChild(const SceneNode& node)
 	mChildren.erase(found);
 	return result;
 }
-
+/**
+ * calls the update function of this node and its children
+ *@param const GameTimer& gt
+ * @return void
+ */
 void SceneNode::update(const GameTimer& gt)
 {
 	updateCurrent(gt);
 	updateChildren(gt);
 }
-
+/**
+ * calls the draw function of this node and its children
+ *@param void
+ * @return void
+ */
 void SceneNode::draw() const
 {
 	
-	// Draw node and children with changed transform
+	
 	drawCurrent();
 	drawChildren();
 }
-
+/**
+ * calls the build function of this node and its children
+ *@param void
+ * @return void
+ */
 void SceneNode::build()
 {
 	buildCurrent();
 	buildChildren();
 }
-
+/**
+ * returns the world position of this node
+ *@param void
+ * @return XMFLOAT3
+ */
 XMFLOAT3 SceneNode::getWorldPosition() const
 {
 	return mWorldPosition;
 }
-
+/**
+ * sets the world position of this node
+ *@param float x, float y, float z
+ * @return void
+ */
 void SceneNode::setPosition(float x, float y, float z)
 {
 	mWorldPosition.x = x;
 	mWorldPosition.y = y;
 	mWorldPosition.z = z;
 }
-
+/**
+ * returns the world rotation of this node
+ *@param void
+ * @return XMFLOAT3
+ */
 XMFLOAT3 SceneNode::getWorldRotation() const
 {
 	return mWorlRotation;
 }
-
+/**
+ * sets the world rotation of this node
+ *@param float x, float y, float z
+ * @return void
+ */
 void SceneNode::setWorldRotation(float x, float y, float z)
 {
 	mWorlRotation.x = x;
@@ -78,19 +114,31 @@ void SceneNode::setWorldRotation(float x, float y, float z)
 	mWorlRotation.z = z;
 
 }
-
+/**
+ * returns the world scale of this node
+ *@param void
+ * @return XMFLOAT3
+ */
 XMFLOAT3 SceneNode::getWorldScale() const
 {
 	return mWorldScale;
 }
-
+/**
+ * sets the scale of this node
+ *@param float x, float y, float z
+ * @return void
+ */
 void SceneNode::setScale(float x, float y, float z)
 {
 	mWorldScale.x = x;
 	mWorldScale.y = y;
 	mWorldScale.z = z;
 }
-
+/**
+ * returns the world tranform of this node
+ *@param void
+ * @return XMFLOAT4X4
+ */
 XMFLOAT4X4 SceneNode::getWorldTransform() const
 {
 	
@@ -108,7 +156,11 @@ XMFLOAT4X4 SceneNode::getWorldTransform() const
 
 	return transform;
 }
-
+/**
+ * returns the local tranform of this node
+ *@param void
+ * @return XMFLOAT4X4
+ */
 XMFLOAT4X4 SceneNode::getTransform() const
 {
 	XMFLOAT4X4 transform = MathHelper::Identity4x4();
@@ -121,7 +173,11 @@ XMFLOAT4X4 SceneNode::getTransform() const
 	return transform;
 
 }
-
+/**
+ * updates the position of this node
+ *@param float x, float y, float z
+ * @return void
+ */
 void SceneNode::move(float x, float y, float z)
 {
 	mWorldPosition.x += x;
@@ -133,7 +189,11 @@ void SceneNode::updateCurrent(const GameTimer& gt)
 {
 	
 }
-
+/**
+ * calls the update function of this node's children
+ *@param const GameTimer& gt
+ * @return void
+ */
 void SceneNode::updateChildren(const GameTimer& gt)
 {
 	for (Ptr& child : mChildren)
@@ -146,7 +206,11 @@ void SceneNode::drawCurrent() const
 {
 
 }
-
+/**
+ * calls the draw function of this node's children
+ *@param const GameTimer& gt
+ * @return void
+ */
 void SceneNode::drawChildren() const
 {
 	for (const Ptr& child : mChildren)
@@ -159,7 +223,11 @@ void SceneNode::drawChildren() const
 void SceneNode::buildCurrent()
 {
 }
-
+/**
+ * calls the build function of this node's children
+ *@param const GameTimer& gt
+ * @return void
+ */
 void SceneNode::buildChildren()
 {
 	for (const Ptr& child : mChildren)

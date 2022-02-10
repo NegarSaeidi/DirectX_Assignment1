@@ -1,6 +1,2 @@
-﻿  World.cpp
-D:\T163-Term6\Hooman-Engine\DirectX\DirectX\GameEngineDevelopment2_Assignment1\GameEngineDevelopment2_Assignment1\World.cpp(61,43): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\T163-Term6\Hooman-Engine\DirectX\DirectX\GameEngineDevelopment2_Assignment1\GameEngineDevelopment2_Assignment1\World.cpp(63,39): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\T163-Term6\Hooman-Engine\DirectX\DirectX\GameEngineDevelopment2_Assignment1\GameEngineDevelopment2_Assignment1\World.cpp(70,36): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\T163-Term6\Hooman-Engine\DirectX\DirectX\GameEngineDevelopment2_Assignment1\GameEngineDevelopment2_Assignment1\World.cpp(76,38): warning C4305: 'argument': truncation from 'double' to 'float'
+﻿  SceneNode.cpp
   GameEngineDevelopment2_Assignment1.vcxproj -> D:\T163-Term6\Hooman-Engine\DirectX\DirectX\GameEngineDevelopment2_Assignment1\x64\Debug\GameEngineDevelopment2_Assignment1.exe

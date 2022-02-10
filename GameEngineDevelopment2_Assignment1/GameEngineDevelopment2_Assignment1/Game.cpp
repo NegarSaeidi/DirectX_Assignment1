@@ -2,7 +2,7 @@
 -------------------------------------------------------------------------
 //Assignment 1
 // author : Negar Saeidi - 101261396
-// Game.cpp
+// Game.cpp - builds the direcX structure of the engine
 -------------------------------------------------------------------------*/
 
 #include "Game.hpp"

@@ -3,6 +3,7 @@
 //Assignment 1
 // author : Negar Saeidi - 101261396
 // SpriteNode.cpp
+// Builds a sprite render item
 -------------------------------------------------------------------------*/
 #include "SpriteNode.hpp"
 #include "Game.hpp"
@@ -15,7 +16,11 @@ void SpriteNode::drawCurrent() const
 	renderer->World = getWorldTransform();
 	renderer->NumFramesDirty++;
 }
-
+/**
+ * Builds a sprite render item and adds it to the mAllRenderItems in the game class
+ * 
+ * @return void
+ */
 void SpriteNode::buildCurrent()
 {
 	auto render = std::make_unique<RenderItem>();

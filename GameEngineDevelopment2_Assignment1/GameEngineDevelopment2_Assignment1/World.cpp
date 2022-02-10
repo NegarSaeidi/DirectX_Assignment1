@@ -18,17 +18,20 @@ World::World(Game* game)
 {
 	
 }
-
+/**
+ * Updates the scene graph, calls the update function of eahc scene node
+ *@param const GameTimer& gt
+ * @return void
+ */
 void World::update(const GameTimer& gt)
 {
 	
       mBackground->move(0.f, 0, mScrollSpeed * gt.DeltaTime());
 	
-	// Move the player sidewards (plane scouts follow the main aircraft)
+	
 	XMFLOAT3 position = mPlayerAircraft->getWorldPosition();
 	XMFLOAT2 velocity = mPlayerAircraft->getVelocity();
 	
-	// If player touches borders, flip its X velocity
 	if (position.x <= mWorldBounds.x
 		|| position.x >=mWorldBounds.y)
 	{
@@ -46,7 +49,11 @@ void World::draw()
 {
 	mSceneGraph->draw();
 }
-
+/**
+ * builds the game scene, creates scene nodes and adds the m to the scene graph
+ *@param void
+ * @return void
+ */
 void World::buildScene()
 {
 	for (std::size_t i = 0; i < LayerCount; ++i)
@@ -61,8 +68,8 @@ void World::buildScene()
 	mPlayerAircraft->setPosition(0, 0.1, -2.0);
 	mPlayerAircraft->setScale(0.5, 0.5, 0.5);
 	mPlayerAircraft->setVelocity(1,0.0001);
-	//mSceneLayers[Air]->attachChild(std::move(aircraft));
-	mSceneGraph->attachChild(std::move(aircraft));
+	mSceneLayers[Air]->attachChild(std::move(aircraft));
+	
 
 
 	std::unique_ptr<Aircraft> enemy1(new Aircraft(Aircraft::Raptor, mGame));

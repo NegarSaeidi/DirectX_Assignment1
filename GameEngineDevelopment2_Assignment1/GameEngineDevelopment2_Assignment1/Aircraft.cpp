@@ -1,7 +1,7 @@
 /**-------------------------------------------------------------------------
 //Assignment 1
 // author : Negar Saeidi - 101261396
-// Aircraft.cpp, builds a render item
+// Aircraft.cpp, builds an aircraft render item
 -------------------------------------------------------------------------*/
 #include "Aircraft.hpp"
 #include "Game.hpp"
@@ -33,9 +33,11 @@ void Aircraft::drawCurrent() const
 	
 	
 }
-/// <summary>
-   /// Builds the current nodde, attaches the relative material to the node
- /// </summary>
+/**
+ * Builds an aircraft render item and adds it to the mAllRenderItems in the game class
+ *
+ * @return void
+ */
 void Aircraft::buildCurrent()
 {
 	auto render = std::make_unique<RenderItem>();
