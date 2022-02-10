@@ -6,7 +6,6 @@
 #include "../../Common/Camera.h"
 #include "FrameResource.h"
 
-class Game;
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -48,6 +47,7 @@ struct RenderItem
 	int BaseVertexLocation = 0;
 };
 
+class Game;
 
 class SceneNode
 {

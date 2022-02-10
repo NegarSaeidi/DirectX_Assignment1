@@ -23,4 +23,5 @@ private:
 	Type              mType;
 	std::string       mSprite;
 	
+	
 };

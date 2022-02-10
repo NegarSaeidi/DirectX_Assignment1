@@ -8,7 +8,7 @@
 class World
 {
 public:
-	explicit                                   World(Game* window);
+	explicit                                   World(Game* game);
 	void                                       update(const GameTimer& gt);
 	void                                       draw();
 	void                                       buildScene();
@@ -26,11 +26,11 @@ private:
 
 	Game*                                             mGame;
 	SceneNode*                                        mSceneGraph;
-	std::array<SceneNode*, LayerCount>                mSceneLayers;
+	std::array<SceneNode*, 3>                mSceneLayers;
 	XMFLOAT4                                          mWorldBounds;
     XMFLOAT2                                          mSpawnPostion;
 	float                                             mScrollSpeed;
-	Aircraft*                                         mPlayerAircraft,*Escort1, *Escort2;
+	Aircraft*                                         mPlayerAircraft;
 	SpriteNode*                                       mBackground;
 
 

@@ -5,6 +5,7 @@ class SpriteNode : public Entity
 {
 public:
 	SpriteNode(Game* game);
+	
 
 private:
 

@@ -12,7 +12,7 @@ SpriteNode::SpriteNode(Game* game):Entity(game)
 
 void SpriteNode::drawCurrent() const
 {
-	renderer->World = getTransform();
+	renderer->World = getWorldTransform();
 	renderer->NumFramesDirty++;
 }
 

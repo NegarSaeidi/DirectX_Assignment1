@@ -28,7 +28,7 @@ Aircraft::Aircraft(Type type, Game* game):Entity(game), mType(type)
 
 void Aircraft::drawCurrent() const
 {
-	renderer->World = getTransform();
+	renderer->World = getWorldTransform();
 	renderer->NumFramesDirty++;
 	
 	
@@ -48,7 +48,7 @@ void Aircraft::buildCurrent()
 	renderer->IndexCount = renderer->Geo->DrawArgs["box"].IndexCount;
 	renderer->StartIndexLocation = renderer->Geo->DrawArgs["box"].StartIndexLocation;
 	renderer->BaseVertexLocation = renderer->Geo->DrawArgs["box"].BaseVertexLocation;
-	
+	//mAircraftRitem = render.get();
 	
 	gameInstance ->getRenderItems().push_back(std::move(render));
 

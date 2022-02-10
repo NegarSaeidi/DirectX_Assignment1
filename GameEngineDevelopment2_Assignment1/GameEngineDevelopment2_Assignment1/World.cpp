@@ -12,7 +12,7 @@ World::World(Game* game)
 	, mPlayerAircraft(nullptr)
 	, mBackground(nullptr)
 	, mSceneLayers()
-	, mWorldBounds(0.f, 0.f, 200.0f, 0.0f)
+	, mWorldBounds(-4.f, 4.f, 200.0f, 0.0f)
 	, mSpawnPostion(0.0f,0.0f)
 	, mScrollSpeed(-1.f)
 {
@@ -29,13 +29,12 @@ void World::update(const GameTimer& gt)
 	XMFLOAT2 velocity = mPlayerAircraft->getVelocity();
 	
 	// If player touches borders, flip its X velocity
-	if (position.x <= -4
-		|| position.x >=4)
+	if (position.x <= mWorldBounds.x
+		|| position.x >=mWorldBounds.y)
 	{
 		velocity.x = -velocity.x;
 		mPlayerAircraft->setVelocity(velocity);
-		Escort1->setVelocity(velocity);
-		Escort2->setVelocity(velocity);
+
 	}
 	
 
@@ -62,23 +61,23 @@ void World::buildScene()
 	mPlayerAircraft->setPosition(0, 0.1, -2.0);
 	mPlayerAircraft->setScale(0.5, 0.5, 0.5);
 	mPlayerAircraft->setVelocity(1,0.0001);
-	mSceneLayers[Air]->attachChild(std::move(aircraft));
-
+	//mSceneLayers[Air]->attachChild(std::move(aircraft));
+	mSceneGraph->attachChild(std::move(aircraft));
 
 
 	std::unique_ptr<Aircraft> enemy1(new Aircraft(Aircraft::Raptor, mGame));
-	Escort1 = enemy1.get();
-	Escort1->setPosition(0.9, 0.2, -3.0);
-	Escort1->setScale(1,1, 1);
-	Escort1->setVelocity(1, 0.0001);
+	auto raptor = enemy1.get();
+	raptor->setPosition(0.9, 0.2, -1.0);
+	raptor->setScale(1,1, 1);
 	mPlayerAircraft->attachChild(std::move(enemy1));
 
 	std::unique_ptr<Aircraft> enemy2(new Aircraft(Aircraft::Raptor, mGame));
-	Escort2 = enemy2.get();
-	Escort2->setPosition(-0.9, 0.2, -3.0);
-	Escort2->setScale(1, 1, 1);
-	Escort2->setVelocity(1, 0.0001);;
+	auto raptor1 = enemy2.get();
+	raptor1->setPosition(-0.9, 0.2, -1.0);
+	raptor1->setScale(1, 1, 1);
+	
 	mPlayerAircraft->attachChild(std::move(enemy2));
+
 
 	std::unique_ptr<SpriteNode> backgroundSprite(new SpriteNode(mGame));
 	mBackground = backgroundSprite.get();

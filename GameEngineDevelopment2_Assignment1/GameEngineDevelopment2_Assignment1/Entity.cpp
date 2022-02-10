@@ -6,7 +6,7 @@
 -------------------------------------------------------------------------*/
 #include "Entity.hpp"
 
-Entity::Entity(Game* game):SceneNode(game)
+Entity::Entity(Game* game):SceneNode(game), mVelocity(0, 0)
 {
 	
 }

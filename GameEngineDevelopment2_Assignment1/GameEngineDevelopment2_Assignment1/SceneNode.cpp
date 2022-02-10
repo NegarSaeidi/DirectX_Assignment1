@@ -95,15 +95,15 @@ XMFLOAT4X4 SceneNode::getWorldTransform() const
 {
 	
 	XMFLOAT4X4 transform = MathHelper::Identity4x4();
-	XMMATRIX temp = XMLoadFloat4x4(&transform);
+	XMMATRIX T = XMLoadFloat4x4(&transform);
 	for (const SceneNode* node = this; node != nullptr; node = node->mParent)
 	{
 		XMMATRIX Tp = XMLoadFloat4x4(&node->getTransform());
-		temp = Tp * temp;
+		T = Tp * T;
 		
 	}
 
-	XMStoreFloat4x4(&transform, temp);
+	XMStoreFloat4x4(&transform, T);
 
 
 	return transform;
@@ -119,6 +119,7 @@ XMFLOAT4X4 SceneNode::getTransform() const
 
 	
 	return transform;
+
 }
 
 void SceneNode::move(float x, float y, float z)
